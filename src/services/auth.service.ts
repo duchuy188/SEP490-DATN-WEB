@@ -1,5 +1,5 @@
 import { API_CONFIG, STORAGE_KEYS } from '../config/api';
-import { ApiResponse, LoginRequest, LoginResponseData, UserProfile } from '../types/auth.types';
+import { ApiResponse, LoginRequest, LoginResponseData, UserProfile, UpdateProfileRequest, ChangePasswordRequest } from '../types/auth.types';
 import { ApiService } from './api.service';
 
 export class AuthService {
@@ -26,6 +26,34 @@ export class AuthService {
     static async getProfile(): Promise<ApiResponse<UserProfile>> {
         return ApiService.get<ApiResponse<UserProfile>>(
             API_CONFIG.ENDPOINTS.AUTH.PROFILE
+        );
+    }
+
+    /**
+     * Update user profile
+     */
+    static async updateProfile(data: UpdateProfileRequest): Promise<ApiResponse<UserProfile>> {
+        const formData = new FormData();
+
+        if (data.full_name) formData.append('full_name', data.full_name);
+        if (data.phone) formData.append('phone', data.phone);
+        if (data.date_of_birth) formData.append('date_of_birth', data.date_of_birth);
+        if (data.language) formData.append('language', data.language);
+        if (data.avatar) formData.append('avatar', data.avatar);
+
+        return ApiService.putFormData<ApiResponse<UserProfile>>(
+            API_CONFIG.ENDPOINTS.AUTH.PROFILE,
+            formData
+        );
+    }
+
+    /**
+     * Change password
+     */
+    static async changePassword(data: ChangePasswordRequest): Promise<ApiResponse<null>> {
+        return ApiService.put<ApiResponse<null>>(
+            API_CONFIG.ENDPOINTS.AUTH.CHANGE_PASSWORD,
+            data
         );
     }
 

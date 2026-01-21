@@ -86,4 +86,40 @@ export class ApiService {
             method: 'DELETE',
         });
     }
+
+    /**
+     * PUT request with FormData (for file uploads)
+     */
+    static async putFormData<T>(endpoint: string, formData: FormData): Promise<T> {
+        const url = `${this.baseUrl}${endpoint}`;
+        const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+        const headers: Record<string, string> = {};
+        // Don't set Content-Type - browser will set it with boundary for FormData
+
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers,
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw {
+                    status: response.status,
+                    ...data,
+                };
+            }
+
+            return data as T;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

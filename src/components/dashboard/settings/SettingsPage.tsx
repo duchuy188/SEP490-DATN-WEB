@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, Globe, Eye, EyeOff, Save, Loader2, CheckCircle } from 'lucide-react';
+import { AuthService } from '../../../services/auth.service';
 
 export const SettingsPage: React.FC = () => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -29,20 +30,24 @@ export const SettingsPage: React.FC = () => {
         try {
             setSaving(true);
             setError(null);
-            // TODO: Implement API call to change password
-            // await authService.changePassword({ currentPassword, newPassword });
 
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await AuthService.changePassword({
+                current_password: currentPassword,
+                new_password: newPassword,
+                confirm_password: confirmPassword,
+            });
 
-            setSuccess('Password changed successfully!');
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
-
-            setTimeout(() => setSuccess(null), 3000);
-        } catch (err) {
-            setError('Failed to change password');
+            if (response.success) {
+                setSuccess('Password changed successfully!');
+                setCurrentPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
+                setTimeout(() => setSuccess(null), 3000);
+            } else {
+                setError(response.error?.message || 'Failed to change password');
+            }
+        } catch (err: any) {
+            setError(err?.error?.message || 'Failed to change password');
         } finally {
             setSaving(false);
         }
@@ -185,8 +190,8 @@ export const SettingsPage: React.FC = () => {
                             <button
                                 onClick={() => setLanguage('vi')}
                                 className={`flex items-center gap-3 px-6 py-4 rounded-xl border-2 transition-all ${language === 'vi'
-                                        ? 'border-blue-500 bg-blue-50'
-                                        : 'border-slate-200 hover:border-slate-300'
+                                    ? 'border-blue-500 bg-blue-50'
+                                    : 'border-slate-200 hover:border-slate-300'
                                     }`}
                             >
                                 <span className="text-2xl">🇻🇳</span>
@@ -199,8 +204,8 @@ export const SettingsPage: React.FC = () => {
                             <button
                                 onClick={() => setLanguage('en')}
                                 className={`flex items-center gap-3 px-6 py-4 rounded-xl border-2 transition-all ${language === 'en'
-                                        ? 'border-blue-500 bg-blue-50'
-                                        : 'border-slate-200 hover:border-slate-300'
+                                    ? 'border-blue-500 bg-blue-50'
+                                    : 'border-slate-200 hover:border-slate-300'
                                     }`}
                             >
                                 <span className="text-2xl">🇺🇸</span>

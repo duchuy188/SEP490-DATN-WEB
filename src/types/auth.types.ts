@@ -46,3 +46,19 @@ export interface UserProfile {
     created_at: string;
     updated_at: string;
 }
+
+// Update Profile Request
+export interface UpdateProfileRequest {
+    full_name?: string;
+    phone?: string;
+    date_of_birth?: string;
+    language?: string;
+    avatar?: File;
+}
+
+// Change Password Request
+export interface ChangePasswordRequest {
+    current_password: string;
+    new_password: string;
+    confirm_password: string;
+}

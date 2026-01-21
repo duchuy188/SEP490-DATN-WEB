@@ -7,6 +7,7 @@ export const API_CONFIG = {
             LOGOUT: '/api/auth/logout',
             REFRESH: '/api/auth/refresh-token',
             PROFILE: '/api/auth/profile',
+            CHANGE_PASSWORD: '/api/auth/change-password',
         },
     },
     TIMEOUT: 10000, // 10 seconds
