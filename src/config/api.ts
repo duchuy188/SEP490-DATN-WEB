@@ -9,6 +9,11 @@ export const API_CONFIG = {
             PROFILE: '/api/auth/profile',
             CHANGE_PASSWORD: '/api/auth/change-password',
         },
+        ADMIN: {
+            USERS: '/api/admin/users',
+            USER_DETAIL: (id: string) => `/api/admin/users/${id}`,
+            USER_STATUS: (id: string) => `/api/admin/users/${id}/status`,
+        },
     },
     TIMEOUT: 10000, // 10 seconds
 };
