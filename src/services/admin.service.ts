@@ -1,6 +1,14 @@
 import { API_CONFIG } from '../config/api';
 import { ApiResponse } from '../types/auth.types';
-import { AdminUser, UpdateUserData, UpdateUserStatusData, UserListData, UserListParams } from '../types/admin.types';
+import {
+    AdminUser,
+    UpdateUserData,
+    UpdateUserStatusData,
+    UserListData,
+    UserListParams,
+    SiteListData,
+    SiteListParams
+} from '../types/admin.types';
 import { ApiService } from './api.service';
 
 export class AdminService {
@@ -63,5 +71,40 @@ export class AdminService {
     static async updateUserStatus(id: string, data: UpdateUserStatusData): Promise<ApiResponse<AdminUser>> {
         const endpoint = API_CONFIG.ENDPOINTS.ADMIN.USER_STATUS(id);
         return ApiService.patch<ApiResponse<AdminUser>>(endpoint, data);
+    }
+
+    // ============ SITE METHODS ============
+
+    /**
+     * Get list of sites with pagination and filters
+     */
+    static async getSites(params: SiteListParams = {}): Promise<ApiResponse<SiteListData>> {
+        const queryParams = new URLSearchParams();
+
+        if (params.page && params.page > 0) {
+            queryParams.append('page', params.page.toString());
+        }
+        if (params.limit && params.limit > 0) {
+            queryParams.append('limit', params.limit.toString());
+        }
+        if (params.region) {
+            queryParams.append('region', params.region);
+        }
+        if (params.type) {
+            queryParams.append('type', params.type);
+        }
+        if (params.is_active !== undefined && params.is_active !== '') {
+            queryParams.append('is_active', params.is_active.toString());
+        }
+        if (params.search && params.search.trim() !== '') {
+            queryParams.append('search', params.search.trim());
+        }
+
+        const queryString = queryParams.toString();
+        const endpoint = queryString
+            ? `${API_CONFIG.ENDPOINTS.ADMIN.SITES}?${queryString}`
+            : API_CONFIG.ENDPOINTS.ADMIN.SITES;
+
+        return ApiService.get<ApiResponse<SiteListData>>(endpoint);
     }
 }

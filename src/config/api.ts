@@ -13,6 +13,9 @@ export const API_CONFIG = {
             USERS: '/api/admin/users',
             USER_DETAIL: (id: string) => `/api/admin/users/${id}`,
             USER_STATUS: (id: string) => `/api/admin/users/${id}/status`,
+            SITES: '/api/admin/sites',
+            SITE_DETAIL: (id: string) => `/api/admin/sites/${id}`,
+            SITE_RESTORE: (id: string) => `/api/admin/sites/${id}/restore`,
         },
     },
     TIMEOUT: 10000, // 10 seconds

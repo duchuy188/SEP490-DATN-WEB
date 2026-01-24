@@ -53,3 +53,44 @@ export interface UpdateUserData {
 export interface UpdateUserStatusData {
     status: 'active' | 'banned';
 }
+
+// ============ SITE TYPES ============
+
+// Site regions
+export type SiteRegion = 'Bac' | 'Trung' | 'Nam';
+
+// Site types
+export type SiteType = 'church' | 'shrine' | 'monastery' | 'center' | 'other';
+
+// Site item in list
+export interface AdminSite {
+    id: string;
+    code: string;
+    name: string;
+    description: string | null;
+    address: string | null;
+    province: string | null;
+    district: string | null;
+    region: SiteRegion;
+    type: SiteType;
+    patron_saint: string | null;
+    cover_image: string | null;
+    is_active: boolean;
+    created_at: string;
+}
+
+// GET /api/admin/sites - Query Parameters
+export interface SiteListParams {
+    page?: number;
+    limit?: number;
+    region?: SiteRegion | '';
+    type?: SiteType | '';
+    is_active?: boolean | '';
+    search?: string;
+}
+
+// GET /api/admin/sites - Response Data
+export interface SiteListData {
+    sites: AdminSite[];
+    pagination: Pagination;
+}
