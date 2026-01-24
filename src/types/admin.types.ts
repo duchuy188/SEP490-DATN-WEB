@@ -94,3 +94,38 @@ export interface SiteListData {
     sites: AdminSite[];
     pagination: Pagination;
 }
+
+// Opening hours structure
+export interface SiteOpeningHours {
+    monday?: string;
+    tuesday?: string;
+    wednesday?: string;
+    thursday?: string;
+    friday?: string;
+    saturday?: string;
+    sunday?: string;
+}
+
+// Contact info structure
+export interface SiteContactInfo {
+    email?: string;
+    phone?: string;
+}
+
+// Creator info
+export interface SiteCreatedBy {
+    id: string;
+    full_name: string;
+    email: string;
+}
+
+// GET /api/admin/sites/{id} - Site Detail Response
+export interface SiteDetail extends AdminSite {
+    history: string | null;
+    latitude: string | null;
+    longitude: string | null;
+    opening_hours: SiteOpeningHours | null;
+    contact_info: SiteContactInfo | null;
+    created_by: SiteCreatedBy | null;
+    updated_at: string;
+}

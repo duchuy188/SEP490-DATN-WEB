@@ -7,7 +7,8 @@ import {
     UserListData,
     UserListParams,
     SiteListData,
-    SiteListParams
+    SiteListParams,
+    SiteDetail
 } from '../types/admin.types';
 import { ApiService } from './api.service';
 
@@ -106,5 +107,14 @@ export class AdminService {
             : API_CONFIG.ENDPOINTS.ADMIN.SITES;
 
         return ApiService.get<ApiResponse<SiteListData>>(endpoint);
+    }
+
+    /**
+     * Get site detail by ID
+     * @param id - Site ID (UUID)
+     */
+    static async getSiteById(id: string): Promise<ApiResponse<SiteDetail>> {
+        const endpoint = API_CONFIG.ENDPOINTS.ADMIN.SITE_DETAIL(id);
+        return ApiService.get<ApiResponse<SiteDetail>>(endpoint);
     }
 }

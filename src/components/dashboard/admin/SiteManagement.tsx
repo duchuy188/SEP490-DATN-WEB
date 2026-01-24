@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { AdminService } from '../../../services/admin.service';
 import { AdminSite, Pagination, SiteListParams, SiteRegion, SiteType } from '../../../types/admin.types';
+import { SiteDetailModal } from './SiteDetailModal';
 
 export const SiteManagement: React.FC = () => {
   const [sites, setSites] = useState<AdminSite[]>([]);
@@ -33,6 +34,10 @@ export const SiteManagement: React.FC = () => {
   const [activeFilter, setActiveFilter] = useState<boolean | ''>('');
   const [currentPage, setCurrentPage] = useState(1);
   const [limit] = useState(9); // 3x3 grid
+
+  // Detail modal states
+  const [selectedSiteId, setSelectedSiteId] = useState<string | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   // Debounce search
   const [searchDebounce, setSearchDebounce] = useState('');
@@ -233,8 +238,8 @@ export const SiteManagement: React.FC = () => {
                     {/* Status badge */}
                     <div className="absolute top-3 left-3">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${site.is_active
-                          ? 'bg-green-500/90 text-white'
-                          : 'bg-red-500/90 text-white'
+                        ? 'bg-green-500/90 text-white'
+                        : 'bg-red-500/90 text-white'
                         }`}>
                         {site.is_active ? (
                           <><CheckCircle className="w-3 h-3" /> Active</>
@@ -254,7 +259,14 @@ export const SiteManagement: React.FC = () => {
                     {/* Hover overlay */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <div className="flex gap-2">
-                        <button className="p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform" title="View">
+                        <button
+                          onClick={() => {
+                            setSelectedSiteId(site.id);
+                            setIsDetailModalOpen(true);
+                          }}
+                          className="p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform"
+                          title="View"
+                        >
                           <Eye className="w-5 h-5 text-blue-600" />
                         </button>
                         <button className="p-3 bg-white rounded-full shadow-lg hover:scale-110 transition-transform" title="Edit">
@@ -356,6 +368,16 @@ export const SiteManagement: React.FC = () => {
           )}
         </>
       )}
+
+      {/* Site Detail Modal */}
+      <SiteDetailModal
+        siteId={selectedSiteId}
+        isOpen={isDetailModalOpen}
+        onClose={() => {
+          setIsDetailModalOpen(false);
+          setSelectedSiteId(null);
+        }}
+      />
     </div>
   );
 };
