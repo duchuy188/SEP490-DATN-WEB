@@ -254,10 +254,10 @@ export const VerificationRequests: React.FC = () => {
                                                     {/* Applicant */}
                                                     <td className="px-6 py-4">
                                                         <div className="flex items-center gap-3">
-                                                            {request.applicant.avatar_url ? (
+                                                            {request.applicant?.avatar_url ? (
                                                                 <img
                                                                     src={request.applicant.avatar_url}
-                                                                    alt={request.applicant.full_name}
+                                                                    alt={request.applicant.full_name || 'User'}
                                                                     className="w-8 h-8 rounded-full object-cover"
                                                                 />
                                                             ) : (
@@ -266,8 +266,8 @@ export const VerificationRequests: React.FC = () => {
                                                                 </div>
                                                             )}
                                                             <div>
-                                                                <p className="font-medium text-slate-900 text-sm">{request.applicant.full_name}</p>
-                                                                <p className="text-xs text-slate-500">{request.applicant.email}</p>
+                                                                <p className="font-medium text-slate-900 text-sm">{request.applicant?.full_name || 'Không rõ'}</p>
+                                                                <p className="text-xs text-slate-500">{request.applicant?.email || 'N/A'}</p>
                                                             </div>
                                                         </div>
                                                     </td>

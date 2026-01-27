@@ -281,7 +281,7 @@ export const VerificationDetailModal: React.FC<VerificationDetailModalProps> = (
                                     Applicant
                                 </h3>
                                 <div className="flex items-center gap-4">
-                                    {request.applicant.avatar_url ? (
+                                    {request.applicant?.avatar_url ? (
                                         <img src={request.applicant.avatar_url} alt="" className="w-12 h-12 rounded-full object-cover" />
                                     ) : (
                                         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
@@ -289,13 +289,13 @@ export const VerificationDetailModal: React.FC<VerificationDetailModalProps> = (
                                         </div>
                                     )}
                                     <div>
-                                        <p className="font-semibold text-slate-900">{request.applicant.full_name}</p>
+                                        <p className="font-semibold text-slate-900">{request.applicant?.full_name || 'Không rõ'}</p>
                                         <div className="flex items-center gap-4 text-sm text-slate-500 mt-1">
                                             <span className="flex items-center gap-1">
                                                 <Mail className="w-3 h-3" />
-                                                {request.applicant.email}
+                                                {request.applicant?.email || 'N/A'}
                                             </span>
-                                            {request.applicant.phone && (
+                                            {request.applicant?.phone && (
                                                 <span className="flex items-center gap-1">
                                                     <Phone className="w-3 h-3" />
                                                     {request.applicant.phone}
