@@ -18,10 +18,12 @@ export const TopBar: React.FC<TopBarProps> = ({
   onViewChange,
 }) => {
   const getPageTitle = () => {
-    const titles = {
+    const titles: Record<ActiveView, string> = {
       dashboard: 'Dashboard',
       sites: 'Sites Management',
+      mysite: 'My Site',
       users: 'User Management',
+      verifications: 'Verification Requests',
       sos: 'SOS Emergency Center',
       guides: 'My Guides',
       content: 'Content Review',

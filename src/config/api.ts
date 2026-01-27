@@ -19,6 +19,9 @@ export const API_CONFIG = {
             VERIFICATION_REQUESTS: '/api/admin/verification-requests',
             VERIFICATION_REQUEST_DETAIL: (id: string) => `/api/admin/verification-requests/${id}`,
         },
+        MANAGER: {
+            SITES: '/api/manager/sites', // GET my site, POST create, PUT update
+        },
     },
     TIMEOUT: 10000, // 10 seconds
 };

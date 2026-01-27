@@ -216,4 +216,51 @@ export class ApiService {
             throw error;
         }
     }
+
+    /**
+     * POST request with FormData (for file uploads)
+     */
+    static async postFormData<T>(endpoint: string, formData: FormData, isRetry: boolean = false): Promise<T> {
+        const url = `${this.baseUrl}${endpoint}`;
+        const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+        const headers: Record<string, string> = {};
+        // Don't set Content-Type - browser will set it with boundary for FormData
+
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers,
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            // Handle 401 - try to refresh token
+            if (response.status === 401 && !isRetry) {
+                const refreshed = await this.tryRefreshToken();
+                if (refreshed) {
+                    return this.postFormData<T>(endpoint, formData, true);
+                } else {
+                    this.handleAuthFailure();
+                    throw { status: 401, message: 'Session expired. Please login again.' };
+                }
+            }
+
+            if (!response.ok) {
+                throw {
+                    status: response.status,
+                    ...data,
+                };
+            }
+
+            return data as T;
+        } catch (error) {
+            throw error;
+        }
+    }
 }

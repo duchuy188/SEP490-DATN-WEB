@@ -6,6 +6,7 @@ import { ManagerDashboard } from './manager/ManagerDashboard';
 import { SiteManagement } from './admin/SiteManagement';
 import { UserManagement } from './admin/UserManagement';
 import { VerificationRequests } from './admin/VerificationRequests';
+import { MySite } from './manager/MySite';
 import { SOSCenter } from './shared/SOSCenter';
 import { ProfilePage } from './profile/ProfilePage';
 import { SettingsPage } from './settings/SettingsPage';
@@ -16,7 +17,7 @@ interface DashboardProps {
   onLogout: () => void;
 }
 
-export type ActiveView = 'dashboard' | 'sites' | 'users' | 'verifications' | 'sos' | 'guides' | 'content' | 'analytics' | 'profile' | 'settings';
+export type ActiveView = 'dashboard' | 'sites' | 'mysite' | 'users' | 'verifications' | 'sos' | 'guides' | 'content' | 'analytics' | 'profile' | 'settings';
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [activeView, setActiveView] = useState<ActiveView>('dashboard');
@@ -46,6 +47,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
       switch (activeView) {
         case 'dashboard':
           return <ManagerDashboard />;
+        case 'mysite':
+          return <MySite />;
         case 'sos':
           return <SOSCenter />;
         case 'profile':

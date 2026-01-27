@@ -39,6 +39,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const managerMenuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'mysite', label: 'My Site', icon: MapPin },
     { id: 'guides', label: 'My Guides', icon: UserCheck },
     { id: 'content', label: 'Content Review', icon: FileText },
     { id: 'sos', label: 'SOS Center', icon: AlertTriangle },
