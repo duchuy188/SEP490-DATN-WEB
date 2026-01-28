@@ -9,7 +9,8 @@ import {
   BarChart3,
   ChevronLeft,
   Cross,
-  ClipboardCheck
+  ClipboardCheck,
+  Calendar
 } from 'lucide-react';
 import { User } from '../../../App';
 import { ActiveView } from '../Dashboard';
@@ -41,6 +42,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'mysite', label: 'My Site', icon: MapPin },
     { id: 'guides', label: 'My Guides', icon: UserCheck },
+    { id: 'shifts', label: 'Shift Submissions', icon: Calendar },  // Quản lý lịch làm việc
     { id: 'content', label: 'Content Review', icon: FileText },
     { id: 'sos', label: 'SOS Center', icon: AlertTriangle },
     { id: 'analytics', label: 'Site Analytics', icon: BarChart3 },

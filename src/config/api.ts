@@ -23,6 +23,10 @@ export const API_CONFIG = {
             SITES: '/api/manager/sites', // GET my site, POST create, PUT update
             LOCAL_GUIDES: '/api/manager/local-guides', // GET list, POST create
             LOCAL_GUIDE_STATUS: (id: string) => `/api/manager/local-guides/${id}/status`, // PATCH status
+            // Shift Submissions endpoints
+            SHIFT_SUBMISSIONS: '/api/manager/local-guides/shift-submissions', // GET list
+            SHIFT_SUBMISSION_DETAIL: (id: string) => `/api/manager/local-guides/shift-submissions/${id}`, // GET detail
+            SHIFT_SUBMISSION_STATUS: (id: string) => `/api/manager/local-guides/shift-submissions/${id}/status`, // PATCH approve/reject
         },
     },
     TIMEOUT: 10000, // 10 seconds

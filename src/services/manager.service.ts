@@ -9,7 +9,12 @@ import {
     CreateLocalGuideData,
     CreateLocalGuideResponse,
     UpdateLocalGuideStatusData,
-    UpdateLocalGuideStatusResponse
+    UpdateLocalGuideStatusResponse,
+    ShiftSubmissionListParams,
+    ShiftSubmissionListResponse,
+    ShiftSubmissionDetail,
+    UpdateShiftSubmissionStatusData,
+    UpdateShiftSubmissionStatusResponse
 } from '../types/manager.types';
 import { ApiService } from './api.service';
 
@@ -194,6 +199,87 @@ export class ManagerService {
         return ApiService.patch<ApiResponse<UpdateLocalGuideStatusResponse>>(
             API_CONFIG.ENDPOINTS.MANAGER.LOCAL_GUIDE_STATUS(id),
             data  // { status: 'active' hoặc 'banned' }
+        );
+    }
+
+    // ============ SHIFT SUBMISSION METHODS ============
+
+    /**
+     * Get list of shift submissions for manager's site
+     * 
+     * Giải thích:
+     * - Lấy danh sách đăng ký lịch làm việc của các Local Guide
+     * - Có thể filter theo: guide_id, status, week_start_date
+     * - Có pagination: page, limit
+     * 
+     * @param params - Các tham số filter và pagination
+     */
+    static async getShiftSubmissions(
+        params?: ShiftSubmissionListParams
+    ): Promise<ApiResponse<ShiftSubmissionListResponse>> {
+        // Tạo query string từ các tham số
+        const queryParams = new URLSearchParams();
+
+        if (params?.page) {
+            queryParams.append('page', params.page.toString());
+        }
+        if (params?.limit) {
+            queryParams.append('limit', params.limit.toString());
+        }
+        if (params?.guide_id) {
+            queryParams.append('guide_id', params.guide_id);
+        }
+        if (params?.status) {
+            queryParams.append('status', params.status);
+        }
+        if (params?.week_start_date) {
+            queryParams.append('week_start_date', params.week_start_date);
+        }
+
+        const queryString = queryParams.toString();
+        const url = queryString
+            ? `${API_CONFIG.ENDPOINTS.MANAGER.SHIFT_SUBMISSIONS}?${queryString}`
+            : API_CONFIG.ENDPOINTS.MANAGER.SHIFT_SUBMISSIONS;
+
+        return ApiService.get<ApiResponse<ShiftSubmissionListResponse>>(url);
+    }
+
+    /**
+     * Get shift submission detail by ID
+     * 
+     * Giải thích:
+     * - Lấy chi tiết 1 submission theo ID
+     * - Nếu submission_type = 'change', response sẽ có field `changes` 
+     *   chứa danh sách các thay đổi so với lịch cũ (diff)
+     * 
+     * @param id - ID của submission cần xem
+     */
+    static async getShiftSubmissionDetail(
+        id: string
+    ): Promise<ApiResponse<ShiftSubmissionDetail>> {
+        return ApiService.get<ApiResponse<ShiftSubmissionDetail>>(
+            API_CONFIG.ENDPOINTS.MANAGER.SHIFT_SUBMISSION_DETAIL(id)
+        );
+    }
+
+    /**
+     * Update shift submission status (approve/reject)
+     * 
+     * Giải thích:
+     * - Duyệt hoặc từ chối submission lịch làm việc
+     * - Khi reject, bắt buộc phải có rejection_reason
+     * - Khi approved, lịch cũ (nếu có) sẽ bị deactivate
+     * 
+     * @param id - ID của submission
+     * @param data - { status: 'approved' | 'rejected', rejection_reason?: string }
+     */
+    static async updateShiftSubmissionStatus(
+        id: string,
+        data: UpdateShiftSubmissionStatusData
+    ): Promise<ApiResponse<UpdateShiftSubmissionStatusResponse>> {
+        return ApiService.patch<ApiResponse<UpdateShiftSubmissionStatusResponse>>(
+            API_CONFIG.ENDPOINTS.MANAGER.SHIFT_SUBMISSION_STATUS(id),
+            data
         );
     }
 }

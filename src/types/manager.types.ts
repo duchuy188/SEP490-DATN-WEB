@@ -129,3 +129,115 @@ export interface UpdateLocalGuideStatusResponse {
     full_name: string;
     status: LocalGuideStatus;
 }
+
+// ============ SHIFT SUBMISSION TYPES ============
+
+// Trạng thái của Shift Submission
+// - pending: đang chờ duyệt
+// - approved: đã duyệt
+// - rejected: đã từ chối
+export type ShiftSubmissionStatus = 'pending' | 'approved' | 'rejected';
+
+// Loại submission
+// - new: submission mới
+// - change: thay đổi lịch (có previous_submission_id)
+export type ShiftSubmissionType = 'new' | 'change';
+
+// Thông tin 1 ca làm việc trong submission
+export interface Shift {
+    id: string;
+    submission_id: string;
+    day_of_week: number;        // 0=CN, 1=T2, 2=T3, ... 6=T7
+    start_time: string;         // Giờ bắt đầu (HH:mm:ss)
+    end_time: string;           // Giờ kết thúc (HH:mm:ss)
+    created_at: string;
+}
+
+// Thông tin Local Guide trong submission
+export interface ShiftSubmissionGuide {
+    id: string;
+    full_name: string;
+    email: string;
+    avatar_url: string | null;
+    phone: string | null;
+}
+
+// 1 Shift Submission đầy đủ
+export interface ShiftSubmission {
+    id: string;
+    guide_id: string;
+    site_id: string;
+    code: string | null;
+    week_start_date: string;        // Ngày bắt đầu tuần (YYYY-MM-DD)
+    submission_type: ShiftSubmissionType;
+    change_reason: string | null;   // Lý do thay đổi (nếu type = 'change')
+    previous_submission_id: string | null;
+    status: ShiftSubmissionStatus;
+    total_shifts: number;           // Tổng số ca trong tuần
+    rejection_reason: string | null; // Lý do từ chối (nếu rejected)
+    approved_by: string | null;     // ID của người duyệt
+    approved_at: string | null;
+    is_active: boolean;
+    createdAt: string;
+    updatedAt: string;
+    guide: ShiftSubmissionGuide;    // Thông tin Local Guide
+    shifts: Shift[];                // Danh sách các ca làm việc
+}
+
+// GET /api/manager/local-guides/shift-submissions - Query params
+export interface ShiftSubmissionListParams {
+    page?: number;
+    limit?: number;
+    guide_id?: string;              // Lọc theo Local Guide
+    status?: ShiftSubmissionStatus | ''; // Lọc theo trạng thái
+    week_start_date?: string;       // Lọc theo tuần (YYYY-MM-DD)
+}
+
+// GET /api/manager/local-guides/shift-submissions - Response
+export interface ShiftSubmissionListResponse {
+    data: ShiftSubmission[];
+    pagination: {
+        page: number;
+        limit: number;
+        totalItems: number;
+        totalPages: number;
+    };
+}
+
+// ============ SHIFT SUBMISSION DETAIL TYPES ============
+
+// Thông tin thay đổi lịch (diff) - dùng khi submission_type = 'change'
+// Hiển thị sự khác biệt giữa lịch cũ và lịch mới
+export interface ShiftChange {
+    day_of_week: number;
+    old: {                      // Ca cũ (null nếu là ca mới)
+        start_time: string;
+        end_time: string;
+    } | null;
+    new: {                      // Ca mới (null nếu bị xóa)
+        start_time: string;
+        end_time: string;
+    } | null;
+    is_changed: boolean;        // Ca đã thay đổi giờ
+    is_new: boolean;            // Ca mới thêm
+    is_removed: boolean;        // Ca bị xóa
+}
+
+// GET /api/manager/local-guides/shift-submissions/{id} - Response
+// Chi tiết submission, bao gồm diff nếu là thay đổi
+export interface ShiftSubmissionDetail extends ShiftSubmission {
+    changes: ShiftChange[] | null;  // null nếu submission_type = 'new'
+}
+
+// ============ UPDATE SHIFT SUBMISSION STATUS ============
+
+// PATCH /api/manager/local-guides/shift-submissions/{id}/status - Request
+// Duyệt hoặc từ chối submission
+export interface UpdateShiftSubmissionStatusData {
+    status: 'approved' | 'rejected';
+    rejection_reason?: string;  // Bắt buộc khi status = 'rejected'
+}
+
+// PATCH /api/manager/local-guides/shift-submissions/{id}/status - Response
+// Trả về submission đã cập nhật
+export type UpdateShiftSubmissionStatusResponse = ShiftSubmission;

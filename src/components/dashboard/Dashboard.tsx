@@ -8,6 +8,7 @@ import { UserManagement } from './admin/UserManagement';
 import { VerificationRequests } from './admin/VerificationRequests';
 import { MySite } from './manager/MySite';
 import { LocalGuides } from './manager/LocalGuides';
+import { ShiftSubmissions } from './manager/ShiftSubmissions';  // Shift Submissions component
 import { SOSCenter } from './shared/SOSCenter';
 import { ProfilePage } from './profile/ProfilePage';
 import { SettingsPage } from './settings/SettingsPage';
@@ -18,7 +19,7 @@ interface DashboardProps {
   onLogout: () => void;
 }
 
-export type ActiveView = 'dashboard' | 'sites' | 'mysite' | 'users' | 'verifications' | 'sos' | 'guides' | 'content' | 'analytics' | 'profile' | 'settings';
+export type ActiveView = 'dashboard' | 'sites' | 'mysite' | 'users' | 'verifications' | 'sos' | 'guides' | 'shifts' | 'content' | 'analytics' | 'profile' | 'settings';
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
   const [activeView, setActiveView] = useState<ActiveView>('dashboard');
@@ -52,6 +53,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout }) => {
           return <MySite />;
         case 'guides':
           return <LocalGuides />;
+        case 'shifts':
+          return <ShiftSubmissions />;  // Hiển Shift Submissions
         case 'sos':
           return <SOSCenter />;
         case 'profile':
